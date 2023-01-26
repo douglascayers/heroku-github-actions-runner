@@ -1,0 +1,21 @@
+{
+    "name": "heroku-github-actions-runner",
+    "description": "Heroku Docker GitHub Actions Runner",
+    "repository": "https://git.soma.salesforce.com/doug-ayers/heroku-github-actions-runner.git",
+    "env": {
+        "GITHUB_ORGANIZATION": {
+            "required": true,
+            "description": "GitHub organization for which to attach our Heroku dynos as GitHub Action runners."
+        },
+        "GITHUB_ACCESS_TOKEN": {
+            "required": true,
+            "description": "Personal access token with 'admin:org' and 'repo' scopes. Used to attach Heroku dynos as GitHub Action runners."
+        }
+    },
+    "formation": {
+        "runner": {
+            "quantity": 4,
+            "size": "private-m"
+        }
+    }
+}

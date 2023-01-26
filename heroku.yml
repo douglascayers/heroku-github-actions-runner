@@ -1,0 +1,11 @@
+# When we push our code to Heroku, rather than buildpacks
+# take over and compile/build our app, we instead tell Heroku
+# to build a Docker image and host that container.
+# https://devcenter.heroku.com/articles/build-docker-images-heroku-yml
+build:
+  docker:
+    runner: Dockerfile
+
+# Note, in private spaces the 'run:' setting is ignored in heroku.yml.
+# Instead, Heroku uses the 'CMD' or `ENTRYPOINT` setting in your Dockerfile.
+# https://help.heroku.com/RNIC7H18

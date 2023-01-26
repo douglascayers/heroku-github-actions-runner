@@ -1,0 +1,61 @@
+name: Rebuild Docker Container
+
+on:
+  workflow_dispatch:
+    # Enables running the workflow manually
+    # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
+  schedule:
+    # Run at 1:00 AM UTC on Sundays (may be delayed depending on resource availability)
+    # https://crontab.guru/#0_1_*_*_0
+    # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+    - cron: '0 1 * * 0'
+
+concurrency: rebuild-docker
+
+jobs:
+    build:
+        name: Rebuild Docker Container
+        runs-on: self-hosted
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v3
+              with:
+                # fetch all history because we force push to heroku
+                fetch-depth: 0
+
+            - name: Configure Git User
+              env:
+                  GIT_USER_NAME: github-actions[bot]
+                  GIT_USER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+              run: |
+                  git config user.name "${GIT_USER_NAME}"
+                  git config user.email "${GIT_USER_EMAIL}"
+
+            # https://devcenter.heroku.com/articles/authentication
+            - name: Configure Heroku Authentication
+              env:
+                  HEROKU_API_USER: ${{ secrets.HEROKU_API_USER }}
+                  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+              run: |
+                  mkdir -p "${HOME}"
+                  {
+                    echo "machine api.heroku.com"
+                    echo "  login ${HEROKU_API_USER}"
+                    echo "  password ${HEROKU_API_KEY}"
+
+                    echo "machine git.heroku.com"
+                    echo "  login ${HEROKU_API_USER}"
+                    echo "  password ${HEROKU_API_KEY}"
+                  } > "${HOME}/.netrc"
+
+            - name: Create Empty Commit
+              run: |
+                  git commit -m "rebuild docker container" --allow-empty
+
+            - name: Trigger Heroku Build
+              env:
+                HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+                HEROKU_APP_NAME: ${{ secrets.HEROKU_ACTIONS_RUNNER_APP }}
+              run: |
+                  heroku git:remote --app ${HEROKU_APP_NAME}
+                  git push --force heroku HEAD:main
