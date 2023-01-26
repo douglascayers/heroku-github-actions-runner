@@ -13,8 +13,10 @@ auto registers the newly spun up Heroku dyno as a runner for our GitHub organiza
 
 - Administrator access to your GitHub organization
 - Administrator access to your Heroku organization
-- GitHub personal access token
-- Heroku API token
+- GitHub personal access token with **admin:org** and **repo** scopes
+- Heroku API token from a non-SSO user with **view** and **deploy** access
+- [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+- [Git CLI](https://git-scm.com/)
 
 The setup requires configurations in both your GitHub organization and your Heroku organization.
 You will switch between them throughout the following instructions.
@@ -61,6 +63,7 @@ You will switch between them throughout the following instructions.
     ```shell
     git clone https://github.com/douglascayers/heroku-github-actions-runner.git
     heroku git:remote --app YOUR_HEROKU_APP
+    heroku apps:stacks:set --app YOUR_HEROKU_APP container
     git push heroku HEAD:main
     ```
 
