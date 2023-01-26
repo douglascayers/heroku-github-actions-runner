@@ -19,6 +19,7 @@ auto registers the newly spun up Heroku dyno as a runner for our GitHub organiza
 - [Git CLI](https://git-scm.com/)
 
 The setup requires configurations in both your GitHub organization and your Heroku organization.
+
 You will switch between them throughout the following instructions.
 
 1. In GitHub, enable GitHub Actions for your organization
