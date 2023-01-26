@@ -59,7 +59,7 @@ You will switch between them throughout the following instructions.
 10. Locally, clone and deploy this repository to your Heroku app
 
     ```shell
-    git clone https://git.soma.salesforce.com/doug-ayers/th-heroku-github-actions-runner.git
+    git clone https://github.com/douglascayers/heroku-github-actions-runner.git
     heroku git:remote --app YOUR_HEROKU_APP
     git push heroku HEAD:main
     ```
